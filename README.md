@@ -46,5 +46,7 @@ Lancé simplement par un "python Ising_main.py" dans le terminal,
 il permet à l'utilisateur de choisir exactement chaque paramètre et configuration de \
 la simulation souhaitée du modèle d'Ising. \
 
+## Lien du dépôt github
 
+[https://github.com/Duckoder/Ising-model.git]
 
