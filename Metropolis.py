@@ -98,7 +98,7 @@ def delta_E(loc_E_0,loc_E_1):
 ### Magnetization calculator
 def magnetic(S_0):
     """Magnetization (sum of all spin values) of the given lattice"""
-    magnet = sum(sum(S_0))
+    magnet = np.sum(S_0)
     return magnet
 
 ### Accepting or rejecting the spin modification:   
@@ -139,15 +139,4 @@ if __name__ == "__main__":
     # Here, matrix_type and model are not used
     Metropolis(N,S_0,J,B,T,edge)
 
-### REMARQUES & TASKS :
-
-# N max ??
-# Tenter tous les plots possibles, chercher des bugs
-
-# virer boundary ?
-# magnet np.sum ?
-
-### Fixed_temp.py :
-# initial_matrix = np.copy(S_0) ---> Why copy ? Used once (first time) 
-# then modified, see line 79, used line 148
 

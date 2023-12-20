@@ -8,7 +8,7 @@ Description : Simulation of the ferromagnetic properties of materials
 in a 2D lattice, with the Metropolis algorithm and graphical representation.
 """
 
-from Initialize import Initialize_Ising
+from Initialize import Initialize_Ising,title,endroll
 from Fixed_temp import Ising_Fix_temp
 from Range_temp import Ising_Range_temp
 
@@ -21,14 +21,16 @@ def Ising_model():
         Ising_Fix_temp(...) or Ising_Range_temp(...) according to the 'model'
         that was chosen.
     """
-
+    
+    title()
+    
     N, matrix_type, S_0, J, B, model, T, edge = Initialize_Ising()
 
     if model == "f":
         Ising_Fix_temp(N,S_0,J,B,T,edge)
     elif model == "r":
-        Ising_Range_temp(N,matrix_type,S_0,J,B,T,edge)
+        Ising_Range_temp(N,matrix_type,J,B,edge)
 
-    print("\n =============== END of the Ising model simulation =============== \n")
+    endroll()
 
 Ising_model()

@@ -25,12 +25,12 @@ def init_lattice():
         N = input(" - Matrix size : N = ... ") 
         try:
             N = int(N) 
-            if 1 < N <= 1000: # What's the max N ??
+            if 1 < N: # N > 1000 is not recommended
                 break
             else:
-                print("---> Error : please enter an integer between 1 and 500.")
+                print("---> Error : please enter an integer greater than 1.")
         except ValueError:
-            print("---> Error : please enter an integer between 1 and 500.")
+            print("---> Error : please enter an integer greater than 1.")
 
     while True:
         matrix_type = input(" - Initial matrix type : random/all_up/all_down (r/u/d) ... ")
@@ -105,24 +105,6 @@ def edge_condition():
             print("---> Error : please choose your answer from (c/t).")    
     return edge
 
-### The following function isn't used but could be by adding
-# the right argument where it is needed all along the program
-def boundary_condition():
-    """ Asks the user for 1 input (that is then returned as it is) :
-        boundary (str: "n" or "d").
-    """
-    print("\n --- Boundary conditions --- \n")
-    print("* No conditions (n): edge spins free to flip.")
-    print("* \"Dirichlet\" condition (d): edge spins fixed in a permanent state.")
-    while True:
-        boundary = input("*** [n/d] ... ")
-        if boundary == "n" or boundary == "d": # can I write "if b == n or d" ??
-            break
-        else:
-            print("---> Error : please choose your answer from (n/d).")
-    return boundary
-
-
 ### Main initializing function (all together)
 def Initialize_Ising():
     """ Initialization of the whole Ising model.
@@ -130,7 +112,6 @@ def Initialize_Ising():
             N (int), matrix_type (str), S_0 (numpy.ndarray), 
             J (float), B (float), model (str), T (float), edge (str).
     """
-    title()
     print(" ------ Initialization of the Ising_model ------ \n")
     N,matrix_type, S_0 = init_lattice()
     J,B = parameters_setup()
@@ -139,6 +120,9 @@ def Initialize_Ising():
     print("\n ------ Starting the simulation ------ \n")
 
     return N, matrix_type, S_0, J, B, model, T, edge
+
+def endroll():
+    print("\n ============= Simulation ended ============= \n")
 
 # test run
 if __name__ == "__main__":

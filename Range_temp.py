@@ -8,7 +8,7 @@ from Metropolis import np,matrix_generator,Metropolis,total_energy,magnetic
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 
-def Range_temp_plot(range_energy,range_magnet):
+def Range_temp_plot(range_energy,range_magnet,J,B):
     """ Plots the final total energies and magnetizations for each temperature.
         Saves an image : <RangeT_energy_magnet.png>.
     """
@@ -24,7 +24,7 @@ def Range_temp_plot(range_energy,range_magnet):
     plt.legend()
     plt.xlabel("Temperature")
 
-    plt.suptitle(f"Final states of a lattice under J = {J}, B = {B}")
+    plt.suptitle(f"Final energies and magnetization under J = {J}, B = {B}")
     plt.tight_layout()
     plt.savefig("RangeT_energy_magnet.png")
     plt.show()
@@ -48,12 +48,14 @@ def Ising_Range_temp(N, matrix_type, J, B, edge):
             T += 0.1
             pbar.update(1)  # Updates the progression bar
             
-    Range_temp_plot(range_energy,range_magnet)
+    Range_temp_plot(range_energy,range_magnet,J,B)
 
 # test run
 if __name__ == "__main__":
 
-    from Initialize import Initialize_Ising
+    from Initialize import Initialize_Ising,title,endroll
+    title()
     N, matrix_type, S_0, J, B, model, T, edge = Initialize_Ising()
     # Here, model is not used.
     Ising_Range_temp(N, matrix_type, J, B, edge)
+    endroll()

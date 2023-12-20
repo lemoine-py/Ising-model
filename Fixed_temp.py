@@ -30,7 +30,7 @@ def lattice_evolution(four_lattices,k_max,J,B,T):
     fig.colorbar(cax4)
     plt.title(f"Iteration {k_max}")
 
-    plt.suptitle(f"J = {J}, B = {B}, T = {T}")
+    plt.suptitle(f"Lattice evolution for J = {J}, B = {B}, T = {T}")
     plt.tight_layout()
     plt.savefig("lattice_evolution.png")
    
@@ -42,39 +42,21 @@ def Fix_temp_plot(energy,magnet,k_max,J,B,T):
     plt.figure(2)
 
     plt.subplot(121)
-    plt.plot(range(int(k_max)),energy[:k_max],label = "Energie" )
+    plt.plot(range(int(k_max)),energy[:k_max],label = "Energy" )
     plt.legend()
     plt.grid()
     plt.xlabel("Iterations")
 
     plt.subplot(122)
-    plt.plot(range(int(k_max)),magnet[:k_max],label = "Magnetisation",color = "orange")
+    plt.plot(range(int(k_max)),magnet[:k_max],label = "Magnetization",color = "orange")
     plt.legend()
     plt.grid()
     plt.xlabel("Iterations")
 
-    plt.suptitle(f"J = {J}, B = {B}, T = {T}")
+    plt.suptitle(f"Energy and magnetization evolution for J = {J}, B = {B}, T = {T}")
     plt.tight_layout()
     plt.savefig("FixT_energy_magnet.png")
-    
-###############################################################################
-def lattice_visualize(S_0,k,k_max,J,B,T):
-    """ Shows 4 lattice states with matshow and colorbar """
-    if k in (0,k_max/3,2*(k_max/3),k_max):
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        cax = ax.matshow(S_0)
-        fig.colorbar(cax)
-        plt.title(f"Iteration {k} for J = {J}, B = {B}, T = {T}")
-        
-def lattice_colorshow(matrix, k):
-    fig5 = plt.figure()
-    ax5 = fig5.add_subplot(111)
-    cax5 = ax5.matshow(matrix)
-    fig5.colorbar(cax5)
-    ax5.set(title=f"Iteration {k} for J = {J}, B = {B}, T = {T}")
-###############################################################################
-###############################################################################
+
 
 def Ising_Fix_temp(N,S_0,J,B,T,edge):
     """ Ising model simulator for one fixed temperature.
@@ -137,8 +119,10 @@ def Ising_Fix_temp(N,S_0,J,B,T,edge):
 # test run
 if __name__ == "__main__":
     
-    from Initialize import Initialize_Ising
+    from Initialize import Initialize_Ising,title,endroll
+    title()
     N, matrix_type, S_0, J, B, model, T, edge = Initialize_Ising()
     # Here, matrix_type and model are not used
     Ising_Fix_temp(N, S_0, J, B, T, edge)
+    endroll()
 
