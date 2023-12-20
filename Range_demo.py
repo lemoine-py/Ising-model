@@ -1,11 +1,9 @@
 
-""" This program is a demonstration of the different sorts of simulations and plots that
-the present Ising model in 2D is capable to produce.
-The program just needs to be run, without any interaction with the user (no inputs).
-All the parameters are already set to default values.
+"""
+This program is a demonstration of the Ising model simulation 
+for a range of increasing temperature values. 
 """
 
-from Metropolis import matrix_generator
 from Range_temp import Ising_Range_temp
 from Initialize import title,endroll
 
