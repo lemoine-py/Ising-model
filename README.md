@@ -41,12 +41,12 @@ Ceux-ci doivent donc être installés si ce n'est déjà fait \
 dans l'ordinateur de l'utilisateur pour qu'il puisse correctement exécuter les programmes.
 
 
-## Exécution 
+## Exécution
 
-Le fichier principal du projet est Ising_main.py . \ 
+Le fichier principal du projet est Ising_main.py .\
 Lancé simplement par un "python Ising_main.py" dans le terminal,
-il permet à l'utilisateur de choisir exactement chaque paramètre et configuration de \
-la simulation souhaitée du modèle d'Ising. \
+il permet à l'utilisateur de choisir exactement chaque paramètre et configuration de\
+la simulation souhaitée du modèle d'Ising.\
 
 Les fichiers Fix_demo.py et Range_demo.py eux sont des programmes sans input et\
 peuvent donc être exécuter sans interaction de la part de l'utilisateur. \
