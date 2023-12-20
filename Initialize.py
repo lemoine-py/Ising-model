@@ -1,9 +1,11 @@
-""" This program defines the 'global variables'
-     used for the Ising model simulation.
+
+""" 
+This program defines all the variables that are needed 
+for any Ising model simulation.
 """
 
-from Metropolis import rnd_matrix,up_matrix
- 
+from Metropolis import matrix_generator
+
 def title():
     """ Prints the program's title """
     print("\n =============== ISING MODEL =============== ")
@@ -18,36 +20,30 @@ def init_lattice():
         Returns the lattice's size (N) and the lattice's matrix of spin values (S_0)
     """
     print(" --- Electron lattice --- \n")
-    
+
     while True:
         N = input(" - Matrix size : N = ... ") 
         try:
             N = int(N) 
-            if 2 <= N <= 500: # What's the max N ??
+            if 1 < N <= 1000: # What's the max N ??
                 break
             else:
                 print("---> Error : please enter an integer between 1 and 500.")
         except ValueError:
             print("---> Error : please enter an integer between 1 and 500.")
-    
+
     while True:
         matrix_type = input(" - Initial matrix type : random/all_up/all_down (r/u/d) ... ")
-        if matrix_type == "r":
-            S_0 = rnd_matrix(N)
-            break
-        elif matrix_type == "u":
-            S_0 = up_matrix(N)
-            break
-        elif matrix_type == "d":
-            S_0 = - up_matrix(N) 
+        if matrix_type in ["r","u","d"]:
             break
         else:
             print("---> Error : please choose your answer from (r/u/d).")
-        
+    S_0 = matrix_generator(N,matrix_type)
+
     return N, matrix_type, S_0
 
 def parameters_setup():
-    """ Asks the user for 2 inputs (that are then returned as they are) :
+    """ Asks the user for 2 inputs (returned as they are) :
         J (float), B (float).
     """
     print("\n --- Physical parameters --- \n")
@@ -66,12 +62,12 @@ def parameters_setup():
         except ValueError:
             print("---> Error : please enter a float.")
 
-    # Same exception handling for the two -> is there a way to combine ?
     return J, B
 
 def temp_model():
-    """ Asks the user for 1 input :
-        model (str: "f" or "r").
+    """ Asks the user for 1 or 2 inputs (returned as they are) :
+        model (str: "f" or "r"), if model == "f" : T (float).
+        If model == "r", T = None by default.
     """
     print("\n --- Simulation type --- \n")
     print("* Fixed_T (f): Evolution of the lattice over time for a fixed temperature")
@@ -100,7 +96,7 @@ def edge_condition():
     """
     print("\n --- Edge conditions --- \n")
     print("* \"Closed square\" lattice (c): edge spins have 3 neighbours and hook spins have 2.")
-    print("* \"Torus shaped\" lattice (t) : opposite edges are connected to each other. All spins have 4 neighbours.")
+    print("* \"Torus shaped\" lattice (t): opposite edges are connected to each other. All spins have 4 neighbours.")
     while True:
         edge = input("*** [c/t] ... ")
         if edge == "c" or edge == "t":
@@ -109,6 +105,8 @@ def edge_condition():
             print("---> Error : please choose your answer from (c/t).")    
     return edge
 
+### The following function isn't used but could be by adding
+# the right argument where it is needed all along the program
 def boundary_condition():
     """ Asks the user for 1 input (that is then returned as it is) :
         boundary (str: "n" or "d").
@@ -123,22 +121,25 @@ def boundary_condition():
         else:
             print("---> Error : please choose your answer from (n/d).")
     return boundary
-    
+
+
+### Main initializing function (all together)
 def Initialize_Ising():
     """ Initialization of the whole Ising model.
         Returns :
-            N (int),S_0 (numpy.ndarray), J (float), B (float),
-            model (str), T (float), edge (str), boundary (str)"""
+            N (int), matrix_type (str), S_0 (numpy.ndarray), 
+            J (float), B (float), model (str), T (float), edge (str).
+    """
     title()
     print(" ------ Initialization of the Ising_model ------ \n")
     N,matrix_type, S_0 = init_lattice()
     J,B = parameters_setup()
     model,T = temp_model()
     edge = edge_condition()
-    boundary = boundary_condition()
     print("\n ------ Starting the simulation ------ \n")
-    return N, matrix_type, S_0, J, B, model, T, edge, boundary
 
+    return N, matrix_type, S_0, J, B, model, T, edge
 
+# test run
 if __name__ == "__main__":
-    N, matrix_type, S_0, J, B, model, T, edge, boundary = Initialize_Ising()
+    N, matrix_type, S_0, J, B, model, T, edge = Initialize_Ising()

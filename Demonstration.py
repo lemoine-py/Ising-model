@@ -4,20 +4,23 @@ The program just needs to be run, without any interaction with the user (no inpu
 All the parameters are already set to default values.
 """
 
-from Metropolis import rnd_matrix
+from Metropolis import matrix_generator
+from Fixed_temp import Ising_Fixed_temp
+from Range_temp import Ising_Range_temp
+
 
 ### Parameters :
 
 N = 100
-S_0 = rnd_matrix(N)
+matrix_type = "r"
+S_0 = matrix_generator(N,matrix_type)
+
 J = 1
 B = 1
 T = 1
 
-# dictionnary of parameters then use **kwargs in the functions ?
+edge = "c"
 
-#...
+Ising_Fixed_temp(N,S_0,J,B,T,edge)
 
-from Ising_main import Ising_model
-
-Ising_model()
+Ising_Range_temp(N,matrix_type,S_0,J,B,T,edge)

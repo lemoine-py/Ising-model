@@ -32,10 +32,8 @@ représentation visuelle de la grille, graphes de l'énergie et de la magnétisa
 
 Dans ce projet, les packages suivants sont utilisés :
 * numpy
-* matplotlib.pyplot
+* matplotlib
 * tqdm
-* time
-*
 Ceux-ci doivent donc être installés si ce n'est déjà fait \
 dans l'ordinateur de l'utilisateur pour qu'il puisse correctement exécuter les programmes.
 
@@ -46,7 +44,9 @@ Lancé simplement par un "python Ising_main.py" dans le terminal,
 il permet à l'utilisateur de choisir exactement chaque paramètre et configuration de \
 la simulation souhaitée du modèle d'Ising. \
 
+### Paramètres initiaux intéressants
+
+
 ## Lien du dépôt github
 
 [https://github.com/Duckoder/Ising-model.git]
-

@@ -3,8 +3,6 @@ Mashed electrons.
 Goddamn Etienne, you can't imagine how much I worked to clean all this mess in your code.
 And yes it is important to have a clean code.
 You just have to run this code and you'll see.
-
-By the way, the names of the two subplots are too long, they're hiding each other on the plot.
 """
 
 import numpy as np
@@ -115,7 +113,7 @@ def accept_flip(S_0,S_1,dE,T):
     return S_0, flip
 
 ### Metropolis algorithm (for one temperature level) :
-def Metropolis(N, matrix_type, S_0, J, B, model, T, edge, boundary):
+def Metropolis(N, S_0, J, B, T, edge): 
     k = 0
     k_max = 15*(N**2) 
     while k <= k_max: 
@@ -125,7 +123,8 @@ def Metropolis(N, matrix_type, S_0, J, B, model, T, edge, boundary):
         loc_E1 = local_energy(i, j, S_1, J, B, edge) # S_1's local energy
         dE = delta_E(loc_E0, loc_E1) # Energy difference
         S_0, flip = accept_flip(S_0, S_1, dE, T) # Validating or rejecting the flip
-
+        k+=1
+    return S_0
 
 
 ###### Other utilities :
@@ -294,70 +293,46 @@ def Initialize_Ising():
     edge = edge_condition()
     boundary = boundary_condition()
     print("\n ------ Starting the simulation ------ \n")
-    return N, matrix_type, S_0, J, B, model, T, edge, boundary
+    return N, matrix_type, S_0, J, B, model, T, edge
 
-def foireux_start():
-    print("\n ====== Foireux program ====== \n")
-    N, matrix_type, S_0, J, B, model, T, edge, boundary = Initialize_Ising()
 
-    return N, matrix_type, S_0, J, B, model, T, edge, boundary
-
-def Ising_Range_temp(N, matrix_type, S_0, J, B, model, T, edge, boundary):
+def Ising_Range_temp(N, matrix_type, S_0, J, B, model, T, edge):
     """ Ising model simulator for a range of temperature.
         Plots total final energy and magnetization of the lattice for each temperature.
     """
-    magnetisation = []
-    energy = []
+    range_magnet = []
+    range_energy = []
 
     T = 0.1  # Initial temperature
     temp_steps = 100  # Amount of steps in the temperature range
-    with tqdm(total=temp_steps) as pbar: # progression bar
+    with tqdm(total=temp_steps) as pbar: # Progression bar
         while T < 10:
-            k = 0
-            k_max = 15 * (N ** 2) # Amount of Metropolis iterations for one temperature level
-
             S_0 = matrix_generator(N, matrix_type)
-
-            while k <= k_max:  # Flipping spins 15n times for one temperature level
-                i, j = ij_generate(N) # Random index
-                S_1 = flip_spin(i, j, S_0) # New matrix with one flipped spin
-                loc_E0 = local_energy(i, j, S_0, B, J, edge) # S_0's local energy
-                loc_E1 = local_energy(i, j, S_1, B, J, edge) # S_1's local energy
-                dE = delta_E(loc_E0, loc_E1) # Energy difference
-                S_0, flip = accept_flip(S_0, S_1, dE, T) # Validating or rejecting the flip
-                k += 1
-            energy.append(total_energy(S_0, J, B, edge))
-            magnetisation.append(magnetic(S_0))
+            S_0 = Metropolis(N,S_0,J,B,T,edge)
+            range_energy.append(total_energy(S_0, J, B, edge))
+            range_magnet.append(magnetic(S_0))
             T += 0.1
-            pbar.update(1)  # Met à jour la barre de progression
-
-    # Vos tracés restent inchangés
-    plt.figure(5)
-    plt.subplot(111)
-    plt.plot(range(temp_steps), energy, label="Energie")
+            pbar.update(1)  # Updates the progression bar
+    
+    plt.figure()
+    plt.subplot(121)
+    plt.plot(np.arange(0.1,10.1,0.1), range_energy, label="Energies finales")
     plt.legend()
-    plt.title(f"Energie finale selon T, avec B = {B}, J = {J}")
+    plt.title(f"B = {B}, J = {J}")
     plt.xlabel("Température")
-    plt.ylabel("Energie")
-
-    plt.figure(6)
-    plt.subplot(111)
-    plt.plot(range(temp_steps = 100), magnetisation, label="Magnétisation", color="orange")
+    #plt.ylabel("Energie")
+    
+    plt.subplot(122)
+    plt.plot(np.arange(0.1,10.1,0.1), range_magnet, label="Magnétisations finales", color="orange")
     plt.legend()
-    plt.title(f"Magnétisation finale selon T, avec B = {B}, J = {J}")
+    plt.title(f"B = {B}, J = {J}")
     plt.xlabel("Température")
-    plt.ylabel("Magnétisation")
+    #plt.ylabel("Magnétisation")
+    
+    #plt.savefig("range_energy_magnet.png")
+    plt.show()
 
-    plt.show()  # Affiche les graphiques à la fin de l'exécution de la fonction
-
-    #plt.savefig("Magnet_T.png")
-
-# If only one plot with two subplots is needed,
-# use only once 'plt.figure(5)'' then 'plt.subplot(211)''
-# then twice 'plt.plot(...)'
-
-
-def Ising_Fixed_temp(N, matrix_type, S_0, J, B, model, T, edge, boundary):
+def Ising_Fixed_temp(N, matrix_type, S_0, J, B, model, T, edge):
     """ Ising model simulator for a range of temperature (0-5).
         Shows 2 plots for total final energies and magnetizations 
         of the lattice for each temperature.
@@ -376,18 +351,21 @@ def Ising_Fixed_temp(N, matrix_type, S_0, J, B, model, T, edge, boundary):
             loc_E0 = local_energy(i, j, S_0, J, B,edge) # S_0's local energy
             loc_E1 = local_energy(i, j, S_1, J, B,edge) # S_1's local energy
             dE = delta_E(loc_E0, loc_E1) # Energy difference
-            S_0, flip = accept_flip(S_0,S_1, dE, T) # Validating or rejecting the flip
+            S_0, flip = accept_flip(S_0,S_1,dE,T) # Validating or rejecting the flip
+            
             if k == 0 or k== k_max/3 or k == 2*(k_max/3) or k == k_max:
                 fig = plt.figure()
                 ax = fig.add_subplot(111)
                 cax = ax.matshow(S_0)
                 fig.colorbar(cax)
-                plt.title(f"Etat de la matrice après {k} itérations avec B = {B}, J = {J}, et T = {T} ")
+                plt.title(f"Configuration à l'itération {k} avec J = {J}, B = {B}, T = {T}")
                 plt.show()
+                
             if flip:
                 dE_new = dE
             else:
                 dE_new = 0
+                
             delta_e.append(dE_new)
             magnet.append(magnetic(S_0))
             k += 1
@@ -402,22 +380,23 @@ def Ising_Fixed_temp(N, matrix_type, S_0, J, B, model, T, edge, boundary):
         i += 1
 
     plt.figure(1)
+    plt.title(f"J = {J}, B = {B}, T = {T}")
     plt.subplot(121)
 
-    plt.plot(range(0,15*(N**2)),energy[:15*(N**2)],label = "Energie" )
+    plt.plot(range(k_max),energy[:k_max],label = "Energie" )
     plt.legend()
     plt.grid()
-    plt.title(f"Energie selon le nombre d'itérations, avec B = {B}, J = {J} et T = {T}")
+    plt.title(f"J = {J}, B = {B}, T = {T}")
     plt.xlabel("Itérations")
     plt.ylabel("Energie")
     #plt.savefig("Energy_FixT.png")
 
     #plt.figure(2)
     plt.subplot(122)
-    plt.plot(range(0,15*(N**2)),magnet[:15*(N**2)],label = "Magnétisation",color = "orange")
+    plt.plot(range(k_max),magnet[:k_max],label = "Magnétisation",color = "orange")
     plt.legend()
     plt.grid()
-    plt.title(f"Magnétisation selon le nombre d'itérations, avec B = {B}, J = {J} et T = {T}")
+    plt.title(f"J = {J}, B = {B}, T = {T}")
     plt.xlabel("Itérations")
     plt.ylabel("Magnétisation")
     #plt.savefig("Magnet_FixT.png")
@@ -426,11 +405,11 @@ def Ising_Fixed_temp(N, matrix_type, S_0, J, B, model, T, edge, boundary):
 
 ### Calling functions
 
-N, matrix_type, S_0, J, B, model, T, edge, boundary = foireux_start()
+N, matrix_type, S_0, J, B, model, T, edge = Initialize_Ising()
 
 if model == "f":
-    Ising_Fixed_temp(N, matrix_type, S_0, J, B, model, T, edge, boundary)
+    Ising_Fixed_temp(N, matrix_type, S_0, J, B, model, T, edge)
 elif model == "r":
-    Ising_Range_temp(N, matrix_type, S_0, J, B, model, T, edge, boundary)
+    Ising_Range_temp(N, matrix_type, S_0, J, B, model, T, edge)
 
 endroll()

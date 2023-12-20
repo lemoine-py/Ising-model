@@ -1,10 +1,9 @@
+
 """
 This program contains the basic functions for the Metropolis algorithm.
-(And a few other utilities)
 """
 
 import numpy as np
-import time
 
 ### Initial configuration :
 def rnd_matrix(N):
@@ -17,11 +16,11 @@ def rnd_matrix(N):
 
 def up_matrix(N):
     """ Generates and returns a NxN matrix with only up spins."""
-    matrix = np.ones((N,N))
+    matrix = np.ones((N,N)) # If a "down_matrix" is needed, multiply by -1.
     return matrix
-# Just multiply up_matrix by -1 if a "down_matrix" is needed.
 
 def matrix_generator(N,matrix_type):
+    """ Generates and returns a matrix following matrix_type. """
     if matrix_type == "r":
         S_0 = rnd_matrix(N)
     elif matrix_type == "u":
@@ -55,7 +54,7 @@ def local_energy_J(i,j,S_0,J,edge):
         loc_energy_J -= J*S_0[i+1][j]*S_0[i][j]
     if j != len(S_0)-1:
         loc_energy_J -= J*S_0[i][j+1]*S_0[i][j]
-        
+
     if edge == "t":
         if i == 0:
             loc_energy_J -= J*S_0[len(S_0)-1][j]*S_0[i][j]
@@ -96,6 +95,11 @@ def delta_E(loc_E_0,loc_E_1):
     dE = loc_E_1 - loc_E_0
     return dE
 
+### Magnetization calculator
+def magnetic(S_0):
+    """Magnetization (sum of all spin values) of the given lattice"""
+    magnet = sum(sum(S_0))
+    return magnet
 
 ### Accepting or rejecting the spin modification:   
 def accept_flip(S_0,S_1,dE,T):
@@ -113,9 +117,8 @@ def accept_flip(S_0,S_1,dE,T):
             flip = False
     return S_0, flip
 
-### Metropolis algorithm (for one temperature lefvel) :
-
-def Metropolis(N, matrix_type, S_0, J, B, model, T, edge, boundary):
+### Metropolis algorithm (for one temperature level) :
+def Metropolis(N, S_0, J, B, T, edge): 
     k = 0
     k_max = 15*(N**2) 
     while k <= k_max: 
@@ -126,83 +129,25 @@ def Metropolis(N, matrix_type, S_0, J, B, model, T, edge, boundary):
         dE = delta_E(loc_E0, loc_E1) # Energy difference
         S_0, flip = accept_flip(S_0, S_1, dE, T) # Validating or rejecting the flip
         k+=1
+    return S_0
 
 
-###### Other utilities :
-    
-### Magnetization calculator
-def magnetic(S_0):
-    """Magnetization (sum of all spin values) of the given lattice"""
-    magnet = sum(sum(S_0))
-    return magnet
-
-
-### Timer decorator  :
-def timer(function):
-    def timed_function(*args, **kwargs):
-        t_start = time.perf_counter()
-        out = function(*args, **kwargs)
-        print(f" --- Total time : {time.perf_counter() - t_start:.2f} seconds")
-        return out
-    return timed_function
-
-### Program's end message :
-def endroll():
-    print("\n =============== END =============== \n")
-
-
+# test run
 if __name__ == "__main__":
     from Initialize import Initialize_Ising
-    N,matrix_type, S_0,J,B,model,T,edge,boundary = Initialize_Ising()
-    Metropolis(N, matrix_type, S_0, J, B, T, edge, boundary)
-    
+    N,matrix_type,S_0,J,B,model,T,edge = Initialize_Ising()
+    # Here, matrix_type and model are not used
+    Metropolis(N,S_0,J,B,T,edge)
+
 ### REMARQUES & TASKS :
-    
-# Trouver transition de phase, dans la grille et les graphes
 
-# Explorer les conditions géométriques des bords  (fermées, connectées)
-# Explorer les conditions physiques aux bords (libres, fixes)
+# N max ??
+# Tenter tous les plots possibles, chercher des bugs
 
-# from Metropolis import timer mais pas de import time dans le fichier_main ?
-# import time, temps de calcul, + utiliser la fameuse 
-# fonction de % d'avancement avec la barre
-# Threading -> comprendre et imaginez une utilisation
+# virer boundary ?
+# magnet np.sum ?
 
-# plt.show ou plt.savefig() et préciser les produits du code dans le rapport
-# Chercher argument de plt.show qui plot 4 subplots dans une fenêtre ??
-# Subplot les 2 graphes energie et magnétisation en un grand plot
+### Fixed_temp.py :
+# initial_matrix = np.copy(S_0) ---> Why copy ? Used once (first time) 
+# then modified, see line 79, used line 148
 
-# Organiser Ising_main() et le système de redirect 
-# qui part de parameters_setup() et co.
-
-# Ne pas abandonner gif_ising
-
-# Si on fait une classe Ising_model, avec une sorte de __init__() qui fait
-# le taf de Initialize_Ising_main, et toutes les autres fonctions dedans,
-# est-ce qu'on ne doit plus mettre tous les arguments aux fonctions ??
-
-# Evaluer la limite de N au-dessus de laquelle le programme
-# tourne trop longtemps et restreindre le choix de N.
-
-# Redéfinir tous les initializations de chaque fichier 
-# avec le nouveau Initialize_Ising()
-
-
-### QUESTIONS :
-
-# from Metropolis import rnd_matrix, au tout début, devant l'endroit ?
-# ou plutôt import Metropolis puis Metropolis.rnd_matrix ?
-
-# from fichier.py import fonction -> mais si la fonction a besoin d'un module
-# qui est lui seulement importé dans fichier.py mais pas ailleurs ?
-
-# import os/sys
-
-# Règle de majuscules dans les noms de variables/fonctions/fichiers
-
-# Gestion d'exception des input : 
-# utiliser logging.info/warning/error ou print ?
-
-# if __name__ = "__main__": pour tous les fichiers mieux ??
-
-# enlever les arguments en trop
