@@ -84,8 +84,6 @@ def Ising_Fix_temp(N,S_0,J,B,T,edge):
             dE = delta_E(loc_E0, loc_E1) # Energy difference
             S_0, flip = accept_flip(S_0,S_1,dE,T) # Validating or rejecting the flip
 
-############lattice_visualize(S_0,k,k_max,J,B,T)
-
             if flip:
                 dE_new = dE
             else:
@@ -113,7 +111,7 @@ def Ising_Fix_temp(N,S_0,J,B,T,edge):
     
     lattice_evolution(four_lattices,k_max,J,B,T)
     Fix_temp_plot(energy,magnet,k_max,J,B,T)
-    plt.show() #
+    plt.show()
     
 
 # test run
