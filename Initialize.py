@@ -25,7 +25,7 @@ def init_lattice():
         N = input(" - Matrix size : N = ... ") 
         try:
             N = int(N) 
-            if 1 < N: # N > 1000 is not recommended
+            if 1 < N: # N > 1000 is not recommended (computation time too long)
                 break
             else:
                 print("---> Error : please enter an integer greater than 1.")

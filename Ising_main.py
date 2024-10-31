@@ -1,7 +1,7 @@
 
 """
 LPHYS1201 : Informatique et méthodes numériques
-Authors: Solal Lemoine, Etienne Roge
+Authors: Solal Lemoine, Etienne Roger
 Date : december 2023
 Project name : Ising Model
 Description : Simulation of the ferromagnetic properties of materials 

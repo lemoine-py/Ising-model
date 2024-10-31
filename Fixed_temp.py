@@ -66,9 +66,9 @@ def Ising_Fix_temp(N,S_0,J,B,T,edge):
         Shows 2 subplots for total energies and magnetizations 
         of the lattice at each point in the iteration process.
     """
-    delta_e = []
-    magnet = []
-    four_lattices = []
+    delta_e = [] # list of each energy variation after a spin flip try
+    magnet = [] # list of each total magnetization of the grid
+    four_lattices = [] # list of four "frames" of the grid used for plotting them
     
     k = 0 
     k_max = 15*(N**2) # Amount of tried spin flips for one temperature level
@@ -89,7 +89,7 @@ def Ising_Fix_temp(N,S_0,J,B,T,edge):
             else:
                 dE_new = 0
 
-            delta_e.append(dE_new) # list of each new local energy change
+            delta_e.append(dE_new) # list of each new local energy change (no positive values)
             magnet.append(magnetic(S_0)) # list of each magnetization
 
             if k in (0,k_max/3,2*(k_max/3),k_max):
